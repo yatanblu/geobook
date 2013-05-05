@@ -6,21 +6,14 @@
     return new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
   };
 
-  getPlacesNearby = function(location) {
+  getPlacesNearby = function(location, callback) {
     var lat, lng, random;
     random = function() {
       return _.random(-100, 100) / 10000.0;
     };
     lat = location.coords.latitude;
     lng = location.coords.longitude;
-    return _.map(_.range(80), function() {
-      var newLocation;
-      newLocation = _.clone(location);
-      newLocation.coords = _.clone(location.coords);
-      newLocation.coords.latitude = lat + random();
-      newLocation.coords.longitude = lng + random();
-      return newLocation;
-    });
+    return $.getJSON('http://geobookme.herokuapp.com/places/nearby.json?callback=?', callback);
   };
 
   color = {
@@ -59,8 +52,14 @@
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
       dropPin(location, 'You are here!', color.red, map);
-      return _.each(getPlacesNearby(location), function(e) {
-        return dropPin(e, captions[_.random(2)], color.green, map);
+      return getPlacesNearby(location, function(places) {
+        var place, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = places.length; _i < _len; _i++) {
+          place = places[_i];
+          _results.push(dropPin(place, captions[_.random(2)], color.green, map));
+        }
+        return _results;
       });
     });
   });

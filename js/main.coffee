@@ -1,15 +1,10 @@
 latLng = (location) -> new google.maps.LatLng location.coords.latitude, location.coords.longitude
 
-getPlacesNearby = (location) ->
+getPlacesNearby = (location, callback) ->
   random = -> _.random(-100, 100) / 10000.0
   lat = location.coords.latitude
   lng = location.coords.longitude
-  _.map _.range(80), ->
-    newLocation = _.clone location
-    newLocation.coords = _.clone location.coords
-    newLocation.coords.latitude = lat + random()
-    newLocation.coords.longitude = lng + random()
-    newLocation
+  $.getJSON('http://geobookme.herokuapp.com/places/nearby.json?callback=?', callback)
 
 color = 
   green: '66CC33'
@@ -55,8 +50,9 @@ google.maps.event.addDomListener window, 'load', ->
     dropPin location, 'You are here!', color.red, map
     
     #show surrounding locations
-    _.each getPlacesNearby(location), (e) ->
-      dropPin e, captions[_.random 2], color.green, map
+    getPlacesNearby location, (places) ->
+      for place in places
+        dropPin place, captions[_.random 2], color.green, map
 
 # $ ->      
 $(window).resize( ->
