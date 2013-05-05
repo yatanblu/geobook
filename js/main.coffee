@@ -14,6 +14,12 @@ getPlacesNearby = (location) ->
 color = 
   green: '66CC33'
   red: 'FE7569'
+  
+captions = [
+  'Great place to play backgammon!',
+  'Bananas...',
+  'Hidden shop'
+]
     
 dropPin = (location, title, color, map) ->
   pinImage = new google.maps.MarkerImage(
@@ -32,6 +38,10 @@ dropPin = (location, title, color, map) ->
       icon: pinImage
       shadow: pinShadow
   positionMarker.setMap map  
+  google.maps.event.addListener positionMarker, 'click', ->
+    infowindow = new google.maps.InfoWindow
+      content: "<b>#{title}</b>"
+    infowindow.open map, positionMarker
 
 google.maps.event.addDomListener window, 'load', ->
   navigator.geolocation.getCurrentPosition (location) ->
@@ -46,7 +56,7 @@ google.maps.event.addDomListener window, 'load', ->
     
     #show surrounding locations
     _.each getPlacesNearby(location), (e) ->
-      dropPin e, 'Something awesome has to be here', color.green, map
+      dropPin e, captions[_.random 2], color.green, map
 
 # $ ->      
 $(window).resize( ->
