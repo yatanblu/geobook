@@ -10,11 +10,23 @@
 {
 	
 	display:block;
+	margin:10px auto;
+
+
 }
 
 #filters a 
 {
-	margin: 5%;
+	margin: 2%;
+
+}
+
+#feedlist
+{
+	border: 1px solid black;
+	color:black;
+	float:left;
+
 }
 
 
