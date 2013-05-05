@@ -8,9 +8,14 @@
 
 #filters 
 {
-	float:left;
+	
+	display:block;
 }
 
+#filters a 
+{
+	margin: 5%;
+}
 
 
 
