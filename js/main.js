@@ -7,12 +7,6 @@
   };
 
   getPlacesNearby = function(location, callback) {
-    var lat, lng, random;
-    random = function() {
-      return _.random(-100, 100) / 10000.0;
-    };
-    lat = location.coords.latitude;
-    lng = location.coords.longitude;
     return $.getJSON('http://geobookme.herokuapp.com/places/nearby.json?callback=?', callback);
   };
 
@@ -37,7 +31,7 @@
     return google.maps.event.addListener(positionMarker, 'click', function() {
       var infowindow;
       infowindow = new google.maps.InfoWindow({
-        content: "<b>" + title + "</b>"
+        content: "        <b>" + ((title != null ? title.length : void 0) > 0 ? title : 'No description') + "</b><br/>        " + (!((title != null ? title.length : void 0) > 0) ? '<img src=\"http://lorempixel.com/400/200/nightlife/\"/>' : "") + "      "
       });
       return infowindow.open(map, positionMarker);
     });
@@ -57,7 +51,7 @@
         _results = [];
         for (_i = 0, _len = places.length; _i < _len; _i++) {
           place = places[_i];
-          _results.push(dropPin(place, captions[_.random(2)], color.green, map));
+          _results.push(dropPin(place, place.name, color.green, map));
         }
         return _results;
       });

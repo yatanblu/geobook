@@ -1,9 +1,6 @@
 latLng = (location) -> new google.maps.LatLng location.coords.latitude, location.coords.longitude
 
 getPlacesNearby = (location, callback) ->
-  random = -> _.random(-100, 100) / 10000.0
-  lat = location.coords.latitude
-  lng = location.coords.longitude
   $.getJSON('http://geobookme.herokuapp.com/places/nearby.json?callback=?', callback)
 
 color = 
@@ -35,7 +32,10 @@ dropPin = (location, title, color, map) ->
   positionMarker.setMap map  
   google.maps.event.addListener positionMarker, 'click', ->
     infowindow = new google.maps.InfoWindow
-      content: "<b>#{title}</b>"
+      content: "
+        <b>#{if title?.length >0 then title else 'No description'}</b><br/>
+        #{if !(title?.length > 0) then '<img src=\"http://lorempixel.com/400/200/nightlife/\"/>' else ""}
+      " 
     infowindow.open map, positionMarker
 
 google.maps.event.addDomListener window, 'load', ->
@@ -52,7 +52,7 @@ google.maps.event.addDomListener window, 'load', ->
     #show surrounding locations
     getPlacesNearby location, (places) ->
       for place in places
-        dropPin place, captions[_.random 2], color.green, map
+        dropPin place, place.name, color.green, map
 
 # $ ->      
 $(window).resize( ->
